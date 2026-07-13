@@ -1,5 +1,6 @@
 require("dotenv").config();
 const companyRoutes = require("./routes/company.routes");
+const loomRoutes = require("./routes/loom.routes");
 
 const express = require("express");
 const cors = require("cors");
@@ -28,6 +29,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/company", companyRoutes);
+app.use("/api/looms", loomRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 
