@@ -5,6 +5,7 @@ const partyRoutes = require("./routes/party.routes");
 const beamReceiptRoutes = require("./routes/beamReceipt.routes");
 const allocationRoutes = require("./routes/allocation.routes");
 const beamRoutes = require("./routes/beam.routes");
+const challanRoutes = require("./routes/dailyChallan.routes");
 
 const express = require("express");
 const cors = require("cors");
@@ -38,7 +39,7 @@ app.use("/api/parties", partyRoutes);
 app.use("/api/beams", beamRoutes);
 app.use("/api/beam-receipts", beamReceiptRoutes);
 app.use("/api/allocations", allocationRoutes);
-
+app.use("/api/challans", challanRoutes);
 
 const PORT = process.env.PORT || 5000;
 

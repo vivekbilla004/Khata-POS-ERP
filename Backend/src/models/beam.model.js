@@ -21,7 +21,16 @@ const beamSchema = new mongoose.Schema(
       trim: true,
       uppercase: true,
     },
-
+    // designNo: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    // },
+    designNo: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     receivedDate: {
       type: Date,
       required: true,
