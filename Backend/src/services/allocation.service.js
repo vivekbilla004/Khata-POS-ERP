@@ -9,7 +9,7 @@ console.log("Create:", LoomAllocation.create);
 console.log("===========================");
 
 const allocateBeam = async ({ beamId, loomId }) => {
-  const beam = await Beam.findById(beamId);
+  const beam = await Beam.findById(beamId).populate("party", "partyName");
 
   if (!beam) throw new Error("Beam not found");
 
@@ -25,14 +25,22 @@ const allocateBeam = async ({ beamId, loomId }) => {
 
   const allocation = await LoomAllocation.create({
     loom: loom._id,
+    loomNumber: loom.loomNumber,
+
     beam: beam._id,
+    beamNumber: beam.beamNumber,
+
     party: beam.party,
+    partyName: beam.party.partyName,
+
+    designNo: beam.designNo || "N/A",
+
     totalCuts: beam.totalCuts,
     remainingCuts: beam.remainingCuts,
+
     allocationDate: new Date(),
     status: "Running",
   });
-
   // Update Beam
 
   beam.status = "Allocated";
@@ -53,11 +61,7 @@ const allocateBeam = async ({ beamId, loomId }) => {
 const getRunningAllocations = async () => {
   return LoomAllocation.find({
     status: "Running",
-  })
-    .populate("loom", "loomNumber")
-    .populate("beam", "beamNumber")
-    .populate("party", "partyName")
-    .sort({ allocationDate: -1 });
+  }).sort({ loomNumber: 1 });
 };
 
 module.exports = {

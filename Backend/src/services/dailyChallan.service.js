@@ -112,6 +112,18 @@ const createDailyChallan = async ({ challanDate, entries }) => {
   return challan;
 };
 
+
+const getAllChallans = async () => {
+  return await DailyChallan.find()
+    .sort({ challanDate: -1 });
+};
+
+const getChallanById = async (id) => {
+  return await DailyChallan.findById(id);
+}; 
+
 module.exports = {
   createDailyChallan,
+    getAllChallans,
+    getChallanById,
 };

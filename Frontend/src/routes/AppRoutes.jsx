@@ -7,6 +7,7 @@ import LoomMaster from "../pages/Loom/LoomMaster";
 import PartyMaster from "../pages/Party/PartyMaster";
 import BeamReceipt from "../pages/Beam/BeamReceipt/BeamReceipt";
 import LoomAllocation from "../pages/Allocation/LoomAllocation";
+import DailyChallan from "../pages/Challan/DailyChallan";
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function AppRoutes() {
           <Route path="/parties" element={<PartyMaster />} />
           <Route path="/beam-receipts" element={<BeamReceipt />} />
           <Route path="/allocation" element={<LoomAllocation />} />
+          <Route path="/challan" element={<DailyChallan />} />
         </Route>
       </Routes>
     </BrowserRouter>

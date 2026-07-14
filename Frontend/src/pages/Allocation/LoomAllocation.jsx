@@ -13,6 +13,7 @@ import {
   getRunningAllocations,
 } from "../../services/allocation.service";
 
+
 export default function LoomAllocation() {
   const [beams, setBeams] = useState([]);
   const [looms, setLooms] = useState([]);
@@ -61,7 +62,7 @@ export default function LoomAllocation() {
       setLoading(true);
 
       await allocateBeam(form);
-
+    
       setForm({
         beamId: "",
         loomId: "",
@@ -124,11 +125,11 @@ export default function LoomAllocation() {
                 ) : (
                   allocations.map((item) => (
                     <tr key={item._id} className="border-t hover:bg-slate-50">
-                      <td className="px-4 py-3">Loom {item.loom.loomNumber}</td>
+                      <td className="px-4 py-3">Loom {item.loomNumber}</td>
 
-                      <td className="px-4 py-3">{item.beam.beamNumber}</td>
+                      <td className="px-4 py-3">{item.beamNumber}</td>
 
-                      <td className="px-4 py-3">{item.party.partyName}</td>
+                      <td className="px-4 py-3">{item.partyName}</td>
 
                       <td className="px-4 py-3 text-center">
                         {item.totalCuts}

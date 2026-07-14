@@ -13,6 +13,7 @@ export const getIdleLooms = async () => {
 export const allocateBeam = async (data) => {
   const res = await api.post("/allocations", data);
   return res.data;
+  Console.log("Allocation response:", res.data);
 };
 
 export const getRunningAllocations = async () => {
