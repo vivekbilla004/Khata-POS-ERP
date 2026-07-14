@@ -46,12 +46,7 @@ const beamSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [
-        "Waiting",
-        "Ready",
-        "Allocated",
-        "Completed",
-      ],
+      enum: ["Waiting", "Ready", "Allocated", "Completed"],
       default: "Waiting",
     },
 
@@ -59,10 +54,20 @@ const beamSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    currentLoom: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Loom",
+      default: null,
+    },
+
+    allocationDate: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Beam", beamSchema);

@@ -3,6 +3,7 @@ const companyRoutes = require("./routes/company.routes");
 const loomRoutes = require("./routes/loom.routes");
 const partyRoutes = require("./routes/party.routes");
 const beamReceiptRoutes = require("./routes/beamReceipt.routes");
+const allocationRoutes = require("./routes/allocation.routes");
 
 const express = require("express");
 const cors = require("cors");
@@ -34,6 +35,7 @@ app.use("/api/company", companyRoutes);
 app.use("/api/looms", loomRoutes);
 app.use("/api/parties", partyRoutes);
 app.use("/api/beam-receipts", beamReceiptRoutes);
+app.use("/api/allocations", allocationRoutes);
 
 
 const PORT = process.env.PORT || 5000;

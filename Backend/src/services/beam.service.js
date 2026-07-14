@@ -14,8 +14,17 @@ const getWaitingBeams = async () => {
     .sort({ receivedDate: 1 });
 };
 
+const getAvailableBeams = async () => {
+  return Beam.find({
+    status: "Waiting",
+  })
+    .populate("party", "partyName")
+    .sort({ receivedDate: 1 });
+};
+
 module.exports = {
   createBeam,
   getBeamByNumber,
   getWaitingBeams,
+  getAvailableBeams,
 };
