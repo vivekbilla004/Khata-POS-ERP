@@ -24,7 +24,10 @@ const loomAllocationSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
+    totalCuts: {
+      type: Number,
+      required: true,
+    },
     remainingCuts: {
       type: Number,
       required: true,
@@ -38,7 +41,7 @@ const loomAllocationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("LoomAllocation", loomAllocationSchema);

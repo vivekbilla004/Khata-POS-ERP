@@ -32,7 +32,24 @@ const getAllLooms = async (req, res) => {
   }
 };
 
+const getIdleLooms = async (req, res) => {
+  try {
+    const looms = await loomService.getIdleLooms();
+
+    res.json({
+      success: true,
+      data: looms,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 module.exports = {
   createLoom,
   getAllLooms,
+  getIdleLooms,
 };

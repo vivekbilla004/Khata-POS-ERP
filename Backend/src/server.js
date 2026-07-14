@@ -4,6 +4,7 @@ const loomRoutes = require("./routes/loom.routes");
 const partyRoutes = require("./routes/party.routes");
 const beamReceiptRoutes = require("./routes/beamReceipt.routes");
 const allocationRoutes = require("./routes/allocation.routes");
+const beamRoutes = require("./routes/beam.routes");
 
 const express = require("express");
 const cors = require("cors");
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 app.use("/api/company", companyRoutes);
 app.use("/api/looms", loomRoutes);
 app.use("/api/parties", partyRoutes);
+app.use("/api/beams", beamRoutes);
 app.use("/api/beam-receipts", beamReceiptRoutes);
 app.use("/api/allocations", allocationRoutes);
 
