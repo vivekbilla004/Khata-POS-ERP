@@ -17,7 +17,7 @@ export default function DailyChallanHistory() {
   const loadData = async () => {
 
     const data = await getChallans();
-
+  console.log("Fetched challans:", data);
     setChallans(data);
 
   };

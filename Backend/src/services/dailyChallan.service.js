@@ -15,17 +15,14 @@ const createDailyChallan = async ({ challanDate, entries }) => {
       .populate("beam")
       .populate("loom");
 
-    if (!allocation)
-      throw new Error("Allocation not found");
+    if (!allocation) throw new Error("Allocation not found");
 
     if (allocation.status !== "Running")
-      throw new Error(
-        `Loom ${allocation.loom.loomNumber} is not running`
-      );
+      throw new Error(`Loom ${allocation.loom.loomNumber} is not running`);
 
     if (item.takaProduced > allocation.remainingCuts)
       throw new Error(
-        `Produced taka exceeds remaining cuts for Beam ${allocation.beam.beamNumber}`
+        `Produced taka exceeds remaining cuts for Beam ${allocation.beam.beamNumber}`,
       );
 
     // -----------------------------
@@ -112,18 +109,16 @@ const createDailyChallan = async ({ challanDate, entries }) => {
   return challan;
 };
 
-
 const getAllChallans = async () => {
-  return await DailyChallan.find()
-    .sort({ challanDate: -1 });
+  return await DailyChallan.find().sort({ challanDate: -1 });
 };
 
 const getChallanById = async (id) => {
   return await DailyChallan.findById(id);
-}; 
+};
 
 module.exports = {
   createDailyChallan,
-    getAllChallans,
-    getChallanById,
+  getAllChallans,
+  getChallanById,
 };

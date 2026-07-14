@@ -7,6 +7,7 @@ import Card from "../../components/ui/Card";
 import ChallanGrid from "./ChallanGrid";
 import ProductionSummary from "./ProductionSummary";
 import DesignSummary from "./DesignSummary";
+import DailyChallanHistory from "./DailyChallanHistory";
 
 import {
   getRunningAllocations,
@@ -167,6 +168,7 @@ export default function DailyChallan() {
             {loading ? "Saving..." : "Save Daily Challan"}
           </button>
         </div>
+      <DailyChallanHistory />
       </Card>
     </div>
   );
