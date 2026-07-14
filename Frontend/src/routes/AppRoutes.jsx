@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import LoomMaster from "../pages/Loom/LoomMaster";
 import PartyMaster from "../pages/Party/PartyMaster";
 import BeamReceipt from "../pages/Beam/BeamReceipt/BeamReceipt";
+import LoomAllocation from "../pages/Allocation/LoomAllocation";
 
 export default function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes() {
           <Route path="/looms" element={<LoomMaster />} />
           <Route path="/parties" element={<PartyMaster />} />
           <Route path="/beam-receipts" element={<BeamReceipt />} />
+          <Route path="/allocation" element={<LoomAllocation />} />
         </Route>
       </Routes>
     </BrowserRouter>
