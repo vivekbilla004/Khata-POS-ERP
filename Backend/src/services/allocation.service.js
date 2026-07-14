@@ -21,23 +21,17 @@ const allocateBeam = async ({ beamId, loomId }) => {
 
   if (loom.status !== "Idle") throw new Error("Loom is already occupied");
 
-//   Allocation Entry
+  //   Allocation Entry
 
-    const allocation = await LoomAllocation.create({
-      loom: loom._id,
-      beam: beam._id,
-      party: beam.party,
-      remainingCuts: beam.remainingCuts,
-    });
-
-//   const allocation = new LoomAllocation({
-//     loom: loom._id,
-//     beam: beam._id,
-//     party: beam.party,
-//     remainingCuts: beam.remainingCuts,
-//   });
-
-//   await allocation.save();
+  const allocation = await LoomAllocation.create({
+    loom: loom._id,
+    beam: beam._id,
+    party: beam.party,
+    totalCuts: beam.totalCuts,
+    remainingCuts: beam.remainingCuts,
+    allocationDate: new Date(),
+    status: "Running",
+  });
 
   // Update Beam
 
@@ -56,6 +50,17 @@ const allocateBeam = async ({ beamId, loomId }) => {
   return allocation;
 };
 
+const getRunningAllocations = async () => {
+  return LoomAllocation.find({
+    status: "Running",
+  })
+    .populate("loom", "loomNumber")
+    .populate("beam", "beamNumber")
+    .populate("party", "partyName")
+    .sort({ allocationDate: -1 });
+};
+
 module.exports = {
   allocateBeam,
+  getRunningAllocations,
 };
