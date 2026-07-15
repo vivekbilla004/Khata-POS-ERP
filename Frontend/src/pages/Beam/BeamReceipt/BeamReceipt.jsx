@@ -1,209 +1,122 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 
 import PageHeader from "../../../components/ui/PageHeader";
-import Card from "../../../components/ui/Card";
 
-import BeamForm from "./BeamForm";
+import ReceiptHeader from "./ReceiptHeader";
+import ReceiptImageUpload from "./ReceiptImageUpload";
 import BeamGrid from "./BeamGrid";
-
-import {
-  createBeamReceipt,
-} from "../../../services/beamReceipt.service";
+import ReceiptSummary from "./ReceiptSummary";
+import toast from "react-hot-toast";
+import ReceiptHistory from "./ReceiptHistory";
 
 import api from "../../../services/api";
 
 const BeamReceipt = () => {
-  const [loading, setLoading] = useState(false);
-
   const [parties, setParties] = useState([]);
 
-  const initialReceipt = {
+  const [images, setImages] = useState([]);
+
+  const [form, setForm] = useState({
     party: "",
     receivedDate: new Date().toISOString().split("T")[0],
+    driverName: "",
+    vehicleNumber: "",
+    transportName: "",
+    partyChallanNumber: "",
+    receivedBy: "",
     remarks: "",
-  };
+  });
 
-  const initialBeam = {
-    beamNumber: "",
-    totalCuts: "",
-    ends: "",
-  };
+  const [beams, setBeams] = useState([
+    {
+      beamNumber: "",
+      designNo: "",
+      ends: "",
+      totalCuts: "",
+      remarks: "",
+    },
+  ]);
 
-  const [receipt, setReceipt] = useState(initialReceipt);
+  useEffect(() => {
+    loadParties();
+  }, []);
 
-  const [beams, setBeams] = useState([initialBeam]);
-
-  // -----------------------------
-  // Fetch Parties
-  // -----------------------------
-
-  const fetchParties = async () => {
+  const loadParties = async () => {
     try {
       const res = await api.get("/parties");
-
       setParties(res.data.data);
     } catch (err) {
-      toast.error("Failed to load parties");
+      console.log(err);
     }
   };
 
-  useEffect(() => {
-    fetchParties();
-  }, []);
-
-  // -----------------------------
-  // Receipt Fields
-  // -----------------------------
-
-  const handleReceiptChange = (e) => {
-    const { name, value } = e.target;
-
-    setReceipt((prev) => ({
+  const handleChange = (e) => {
+    setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
-  // -----------------------------
-  // Beam Grid
-  // -----------------------------
-
-  const addBeam = () => {
-    setBeams((prev) => [
-      ...prev,
-      {
-        beamNumber: "",
-        totalCuts: "",
-        ends: "",
-      },
-    ]);
-  };
-
-  const removeBeam = (index) => {
-    if (beams.length === 1) return;
-
-    setBeams((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateBeam = (index, field, value) => {
-    const updated = [...beams];
-
-    updated[index][field] = value;
-
-    setBeams(updated);
-  };
-
-  // -----------------------------
-  // Validation
-  // -----------------------------
-
-  const validate = () => {
-    if (!receipt.party) {
-      toast.error("Select Party");
-      return false;
-    }
-
-    if (!receipt.receivedDate) {
-      toast.error("Select Received Date");
-      return false;
-    }
-
-    for (let i = 0; i < beams.length; i++) {
-      const beam = beams[i];
-
-      if (!beam.beamNumber.trim()) {
-        toast.error(`Beam No missing in Row ${i + 1}`);
-        return false;
-      }
-
-      if (!beam.totalCuts || beam.totalCuts <= 0) {
-        toast.error(`Cuts missing in Row ${i + 1}`);
-        return false;
-      }
-
-      if (!beam.ends || beam.ends <= 0) {
-        toast.error(`Ends missing in Row ${i + 1}`);
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-  // -----------------------------
-  // Save
-  // -----------------------------
-
-  const handleSubmit = async () => {
-    if (!validate()) return;
-
+  const handleSaveReceipt = async () => {
     try {
-      setLoading(true);
+      const formData = new FormData();
 
-      await createBeamReceipt({
-        ...receipt,
-        beams,
+      formData.append("party", form.party);
+      formData.append("receivedDate", form.receivedDate);
+      formData.append("driverName", form.driverName);
+      formData.append("vehicleNumber", form.vehicleNumber);
+      formData.append("transportName", form.transportName);
+      formData.append("partyChallanNumber", form.partyChallanNumber);
+      formData.append("receivedBy", form.receivedBy);
+      formData.append("remarks", form.remarks);
+
+      formData.append("beams", JSON.stringify(beams));
+
+      images.forEach((image) => {
+        formData.append("images", image);
       });
 
-      toast.success("Beam Receipt Saved");
+      await api.post("/beam-receipts", formData);
 
-      setReceipt(initialReceipt);
+      toast.success("Receipt Saved");
 
-      setBeams([initialBeam]);
+      loadReceipts();
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message ||
-          "Failed to Save Receipt"
-      );
-    } finally {
-      setLoading(false);
+      console.log(err);
+
+      console.log(err.response);
+
+      console.log(err.response?.data);
+
+      toast.error(err.response?.data?.message || "Unable to Save Receipt");
     }
   };
 
   return (
     <div className="space-y-6">
+      <PageHeader title="Beam Receipt" subtitle="Receive Beam from Party" />
 
-      <PageHeader
-        title="Beam Receipt"
-        subtitle="Receive multiple beams from party"
+      <ReceiptHeader
+        parties={parties}
+        form={form}
+        handleChange={handleChange}
       />
 
-      <Card>
+      <ReceiptImageUpload images={images} setImages={setImages} />
 
-        <BeamForm
-          receipt={receipt}
-          parties={parties}
-          handleReceiptChange={handleReceiptChange}
-        />
+      <BeamGrid beams={beams} setBeams={setBeams} />
 
-        <BeamGrid
-          beams={beams}
-          addBeam={addBeam}
-          removeBeam={removeBeam}
-          updateBeam={updateBeam}
-        />
-
-        <div className="mt-8 flex flex-col gap-4 border-t pt-5 md:flex-row md:items-center md:justify-between">
-
-          <h2 className="font-semibold text-lg">
-            Total Beams : {beams.length}
-          </h2>
-
-          <button
-            disabled={loading}
-            onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-8 py-3 text-white hover:bg-blue-700 disabled:opacity-60"
-          >
-            {loading ? "Saving..." : "Save Receipt"}
-          </button>
-
-        </div>
-
-      </Card>
-
+      <ReceiptSummary beams={beams} />
+      <div className="flex justify-end mt-6">
+        <button
+          onClick={handleSaveReceipt}
+          className="rounded-xl bg-blue-600 px-8 py-3 text-white font-semibold hover:bg-blue-700"
+        >
+          Save Receipt
+        </button>
+      </div>
+      <ReceiptHistory />
     </div>
   );
-}
-
+};
 export default BeamReceipt;
